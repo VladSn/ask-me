@@ -1,3 +1,3 @@
 # ask-me
-only JS project
+Only JS project,
 just for study
