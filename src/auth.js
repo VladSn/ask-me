@@ -1,44 +1,57 @@
-import {modal} from "./modal";
+import { modal } from "./modal";
 
 export function auth(options = {}) {
   return new Promise((resolve, reject) => {
     const $modal = modal({
-      title: 'Авторизация',
-      width: '600px',
+      title: "Авторизация",
+      width: "600px",
       content: _getAuthForm(),
       closable: true,
       onClose() {
-        $modal.destroy()
+        $modal.destroy();
       },
       footerButtons: [
-        {text: 'Войти', type: 'primary', handler(event) {
-            event.preventDefault()
-            const apiKey = "AIzaSyCe54dh4ur5uJFoRFMyynTtl5yo9VF6x_c"
-            const email = document.querySelector('#email').value
-            const password = document.querySelector('#password').value
-            const btn = event.target
-            btn.disabled = true
-            return fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`, {
-              method: 'POST',
-              body: JSON.stringify({email, password, returnSecureToken: true}),
-              headers: {
-                'Content-Type': 'application/json'
+        {
+          text: "Войти",
+          type: "primary",
+          handler(event) {
+            event.preventDefault();
+            const apiKey = "AIzaSyCe54dh4ur5uJFoRFMyynTtl5yo9VF6x_c";
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+            const btn = event.target;
+            btn.disabled = true;
+            return fetch(
+              `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  email,
+                  password,
+                  returnSecureToken: true,
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Request-Method": "*",
+                },
               }
-            }).then(res => res.json())
-            .then(data => {
-              if (data && data.error) {
-                reject(data.error)
-                btn.disabled = false
-              } else {
-                resolve(data.idToken)
-              }
-              $modal.close()
-            })
-          } },
-      ]
-    })
-    $modal.open()
-  })
+            )
+              .then((res) => res.json())
+              .then((data) => {
+                if (data && data.error) {
+                  reject(data.error);
+                  btn.disabled = false;
+                } else {
+                  resolve(data.idToken);
+                }
+                $modal.close();
+              });
+          },
+        },
+      ],
+    });
+    $modal.open();
+  });
 }
 
 function _getAuthForm() {
@@ -53,5 +66,5 @@ function _getAuthForm() {
             <label for="password">Password</label>
         </div>
     </form>
-  `
+  `;
 }
